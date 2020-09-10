@@ -224,3 +224,10 @@ function love.mousepressed(m_x, m_y, button, istouch, presses)
 		return
 	end
 end
+
+
+function love.keypressed(key, scancode, isrepeat)
+	if key == "escape" then
+		love.event.quit()
+	end
+end
