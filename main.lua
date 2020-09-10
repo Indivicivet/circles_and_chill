@@ -1,7 +1,7 @@
 
 function love.load()
 	CURSOR_SIZE = 10
-	BPM = 120
+	BPM = 180
 	SECONDS_PER_BEAT = 60 / BPM
 	HIT_FADEOUT_BEATS = 2
 	started = false
@@ -33,7 +33,7 @@ function love.load()
 			beat_start=16+i,
 			x=love.math.random(50, 750),
 			y=love.math.random(50, 550),
-			size=30 + 20 * love.math.random(0, 1),
+			size=40 + 30 * love.math.random(0, 1),
 			count_in=2,
 		}
 	end
