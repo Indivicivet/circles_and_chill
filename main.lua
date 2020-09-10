@@ -7,10 +7,28 @@ function love.load()
 	GAMEPLAY_TOP = math.floor(HEIGHT * 0.1)
 	GAMEPLAY_BOTTOM = HEIGHT - GAMEPLAY_TOP
 	love.window.setMode(WIDTH, HEIGHT)
+	
 	CURSOR_SIZE = 10
 	BPM = 180
 	SECONDS_PER_BEAT = 60 / BPM
 	HIT_FADEOUT_BEATS = 2
+	
+	BASE_FONT = love.graphics.newFont(32)
+	HIT_MSG_FONT = love.graphics.newFont(96)
+	
+	-- sound stuff
+	HIT_SOUND = love.audio.newSource("sounds/263133__pan14__tone-beep.wav", "static")
+	MISS_SOUND = love.audio.newSource("sounds/399934__waveplay__short-click-snap-perc.wav", "static")
+	MISS_SOUND:setVolume(0.5)
+
+	-- simple way to allow sounds to overlap, may break at high BPM
+	-- (esp w/ the "short-click-snap-perc" miss sound)
+	hit_sounds = {HIT_SOUND:clone(), HIT_SOUND:clone(), HIT_SOUND:clone(), HIT_SOUND:clone()}
+	miss_sounds = {MISS_SOUND:clone(), MISS_SOUND:clone(), MISS_SOUND:clone(), MISS_SOUND:clone()}
+	hit_sound_idx = 1
+	miss_sound_idx = 1
+	
+	-- gameplay variables
 	started = false
 	t = 0
 	next_circ_idx = 1
@@ -31,18 +49,6 @@ function love.load()
 	current_circs = {}
 	past_circs = {}
 	hit_msgs = {}
-	BASE_FONT = love.graphics.newFont(32)
-	HIT_MSG_FONT = love.graphics.newFont(96)
-	HIT_SOUND = love.audio.newSource("sounds/263133__pan14__tone-beep.wav", "static")
-	MISS_SOUND = love.audio.newSource("sounds/399934__waveplay__short-click-snap-perc.wav", "static")
-	MISS_SOUND:setVolume(0.5)
-
-	-- simple way to allow sounds to overlap, may break at high BPM
-	-- (esp w/ the "short-click-snap-perc" miss sound)
-	hit_sounds = {HIT_SOUND:clone(), HIT_SOUND:clone(), HIT_SOUND:clone(), HIT_SOUND:clone()}
-	miss_sounds = {MISS_SOUND:clone(), MISS_SOUND:clone(), MISS_SOUND:clone(), MISS_SOUND:clone()}
-	hit_sound_idx = 1
-	miss_sound_idx = 1
 end
 
 
