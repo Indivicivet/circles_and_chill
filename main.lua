@@ -8,7 +8,8 @@ function love.load()
 	GAMEPLAY_BOTTOM = HEIGHT - GAMEPLAY_TOP
 	love.window.setMode(WIDTH, HEIGHT)
 	
-	CURSOR_SIZE = 10
+	CURSOR_SIZE = 15
+	CURSOR_ALPHA = 0.7
 	BPM = 180
 	SECONDS_PER_BEAT = 60 / BPM
 	HIT_FADEOUT_BEATS = 2
@@ -132,8 +133,12 @@ function love.draw()
 		--love.graphics.circle("fill", circ.x, circ.y, circ.size)  -- old ver
 	end
 	mouse_x, mouse_y = love.mouse.getPosition()
-	love.graphics.setColor(1, 0.5, 0.5)
+	love.graphics.setColor(1, 0.4, 0.3, CURSOR_ALPHA)
 	love.graphics.circle("fill", mouse_x, mouse_y, CURSOR_SIZE)
+	love.graphics.setColor(1, 1, 1)
+	love.graphics.setLineWidth(CURSOR_SIZE / 8)
+	love.graphics.circle("line", mouse_x, mouse_y, CURSOR_SIZE)
+	love.graphics.circle("fill", mouse_x, mouse_y, 2)
 end
 
 
