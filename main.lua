@@ -7,6 +7,7 @@ function love.load()
 	GAMEPLAY_TOP = math.floor(HEIGHT * 0.1)
 	GAMEPLAY_BOTTOM = HEIGHT - GAMEPLAY_TOP
 	love.window.setMode(WIDTH, HEIGHT)
+	love.window.setTitle("Circles and Chill")
 	
 	CURSOR_SIZE = 15
 	CURSOR_ALPHA = 0.7
