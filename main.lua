@@ -1,5 +1,12 @@
 
 function love.load()
+	WIDTH = 1280
+	HEIGHT = 720
+	GAMEPLAY_LEFT = math.floor(WIDTH * 0.1)
+	GAMEPLAY_RIGHT = WIDTH - GAMEPLAY_LEFT
+	GAMEPLAY_TOP = math.floor(HEIGHT * 0.1)
+	GAMEPLAY_BOTTOM = HEIGHT - GAMEPLAY_TOP
+	love.window.setMode(WIDTH, HEIGHT)
 	CURSOR_SIZE = 10
 	BPM = 180
 	SECONDS_PER_BEAT = 60 / BPM
@@ -11,29 +18,13 @@ function love.load()
 	hits = 0
 	misses = 0
 	combo = 0
-	all_circs = {
-		-- currently, u need to order these
-		-- todo :: handle fractional starts etc
-		{beat_start=2, x=50, y=50, size=30, count_in=2},
-		{beat_start=3, x=75, y=50, size=30, count_in=2},
-		{beat_start=4, x=100, y=50, size=30, count_in=2},
-		{beat_start=5, x=100, y=50, size=50, count_in=2},
-		{beat_start=6, x=500, y=500, size=50, count_in=2},
-		{beat_start=7, x=300, y=300, size=50, count_in=2},
-		{beat_start=10, x=300, y=300, size=50, count_in=2},
-		{beat_start=11, x=300, y=300, size=50, count_in=2},
-		{beat_start=12, x=200, y=300, size=50, count_in=2},
-		{beat_start=13, x=200, y=200, size=50, count_in=2},
-		{beat_start=14, x=200, y=400, size=50, count_in=2},
-		{beat_start=15, x=400, y=400, size=50, count_in=2},
-		{beat_start=16, x=500, y=400, size=20, count_in=2},
-	}
+	all_circs = {}
 	for i = 1, 100 do
 		all_circs[#all_circs + 1] = {
-			beat_start=16+i,
-			x=love.math.random(50, 750),
-			y=love.math.random(50, 550),
-			size=40 + 30 * love.math.random(0, 1),
+			beat_start=3 + i,
+			x=love.math.random(GAMEPLAY_LEFT, GAMEPLAY_RIGHT),
+			y=love.math.random(GAMEPLAY_TOP, GAMEPLAY_BOTTOM),
+			size=50 + 20 * love.math.random(0, 1),
 			count_in=2,
 		}
 	end
@@ -94,7 +85,13 @@ function love.draw()
 			msg.color.r, msg.color.g, msg.color.b,
 			msg.color.a * msg.timer / msg.duration
 		)
-		love.graphics.printf(msg.msg, msg.x, msg.y, 800, "center")
+		love.graphics.printf(
+			msg.msg,
+			GAMEPLAY_LEFT + msg.x,
+			GAMEPLAY_TOP + msg.y,
+			GAMEPLAY_RIGHT - GAMEPLAY_LEFT,
+			"center"
+		)
 	end
 	for i, circ in ipairs(current_circs) do
 		scale_amt = circ.timer / (SECONDS_PER_BEAT * circ.count_in)
@@ -145,8 +142,8 @@ function love.update(dt)
 					timer = SECONDS_PER_BEAT * 3,
 					duration = 3,
 					msg = "COMBO +" .. tostring(combo) .. "!",
-					x = love.math.random(-100, 100),
-					y = 200 + love.math.random(-100, 100),
+					x = love.math.random(-100, 100),  -- will be "full width"
+					y = GAMEPLAY_TOP + love.math.random(0, 200),
 					color = {r=1, g=1, b=1, a=0.5},
 				}
 				play_hit_sound()
@@ -160,7 +157,7 @@ function love.update(dt)
 						duration = 4,
 						msg = "COMBO FAIL!",
 						x = 0,
-						y = 200,
+						y = GAMEPLAY_TOP + 100,
 						color = {r=1, g=0, b=0, a=0.7,},
 					}
 				}
