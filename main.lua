@@ -42,6 +42,27 @@ function love.load()
 	hit_msgs = {}
 	BASE_FONT = love.graphics.newFont(32)
 	HIT_MSG_FONT = love.graphics.newFont(96)
+	HIT_SOUND = love.audio.newSource("sounds/263133__pan14__tone-beep.wav", "static")
+	MISS_SOUND = love.audio.newSource("sounds/399934__waveplay__short-click-snap-perc.wav", "static")
+	MISS_SOUND:setVolume(0.5)
+
+	-- simple way to allow sounds to overlap, may break at high BPM
+	-- (esp w/ the "short-click-snap-perc" miss sound)
+	hit_sounds = {HIT_SOUND:clone(), HIT_SOUND:clone(), HIT_SOUND:clone(), HIT_SOUND:clone()}
+	miss_sounds = {MISS_SOUND:clone(), MISS_SOUND:clone(), MISS_SOUND:clone(), MISS_SOUND:clone()}
+	hit_sound_idx = 1
+	miss_sound_idx = 1
+end
+
+
+function play_hit_sound()
+	hit_sounds[hit_sound_idx]:play()
+	hit_sound_idx = (hit_sound_idx - 1) % #hit_sounds + 1
+end
+
+function play_miss_sound()
+	miss_sounds[miss_sound_idx]:play()
+	miss_sound_idx = (miss_sound_idx - 1) % #miss_sounds + 1
 end
 
 
@@ -128,6 +149,7 @@ function love.update(dt)
 					y = 200 + love.math.random(-100, 100),
 					color = {r=1, g=1, b=1, a=0.5},
 				}
+				play_hit_sound()
 			else
 				misses = misses + 1
 				score = score - 5
@@ -142,6 +164,7 @@ function love.update(dt)
 						color = {r=1, g=0, b=0, a=0.7,},
 					}
 				}
+				play_miss_sound()
 			end
 			past_circs[#past_circs + 1] = {
 				x = circ.x,
