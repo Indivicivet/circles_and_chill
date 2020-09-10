@@ -98,15 +98,32 @@ function love.draw()
 		love.graphics.setColor(1, 1, 1, 1 - scale_amt)
 		love.graphics.circle("fill", circ.x, circ.y, circ.size)
 		love.graphics.setColor(0.5, 0.5, 0.5, 1 - scale_amt)
+		love.graphics.setLineWidth(3)
 		love.graphics.circle("line", circ.x, circ.y, circ.size * (1 + scale_amt))
 	end
 	for i, circ in ipairs(past_circs) do
 		if circ.hit then
 			love.graphics.setColor(0, 1, 0, circ.timer / HIT_FADEOUT_BEATS)
+			love.graphics.setLineWidth(circ.size / 10)
+			--love.graphics.circle("line", circ.x, circ.y, circ.size * 0.3)  -- circle
+			love.graphics.line( -- tick
+				circ.x - circ.size/2, circ.y,
+				circ.x - circ.size/6, circ.y + circ.size/2,
+				circ.x + circ.size/2, circ.y - circ.size/2
+			)
 		else
 			love.graphics.setColor(1, 0, 0, circ.timer / HIT_FADEOUT_BEATS)
+			love.graphics.setLineWidth(circ.size / 10)
+			love.graphics.line(  -- X
+				circ.x - circ.size/2, circ.y - circ.size/2,
+				circ.x + circ.size/2, circ.y + circ.size/2
+			)
+			love.graphics.line(  -- X
+				circ.x - circ.size/2, circ.y + circ.size/2,
+				circ.x + circ.size/2, circ.y - circ.size/2
+			)
 		end
-		love.graphics.circle("fill", circ.x, circ.y, circ.size)
+		--love.graphics.circle("fill", circ.x, circ.y, circ.size)  -- old ver
 	end
 	mouse_x, mouse_y = love.mouse.getPosition()
 	love.graphics.setColor(1, 0.5, 0.5)
