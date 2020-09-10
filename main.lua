@@ -37,6 +37,7 @@ function love.load()
 	hits = 0
 	misses = 0
 	combo = 0
+	combo_max = 0
 	all_circs = {}
 	for i = 1, 100 do
 		all_circs[#all_circs + 1] = {
@@ -71,7 +72,6 @@ function love.draw()
 		return
 	end
 	love.graphics.setColor(1, 1, 1)
-	love.graphics.print("FPS: " .. tostring(love.timer.getFPS()), 600, 10)
 	love.graphics.print("score: " .. tostring(score), 100, 10)
 	if not (hits + misses == 0) then
 		if misses == 0 then
@@ -84,7 +84,9 @@ function love.draw()
 	end
 	love.graphics.print("accuracy: " .. acc_str, 100, 50)
 	love.graphics.print("combo: " .. tostring(combo), 300, 10)
-	love.graphics.print("beat " .. tostring(beat_num), 600, 50)
+	love.graphics.print("max combo: " .. tostring(combo_max), 600, 10)
+	love.graphics.print("FPS: " .. tostring(love.timer.getFPS()), 1000, 10)
+	love.graphics.print("beat " .. tostring(beat_num), 1000, 50)
 	--love.graphics.print("sdfsdf " .. tostring(#current_circs), 500, 100)
 	love.graphics.setFont(HIT_MSG_FONT)
 	for i, msg in ipairs(hit_msgs) do
@@ -133,7 +135,7 @@ function love.draw()
 		--love.graphics.circle("fill", circ.x, circ.y, circ.size)  -- old ver
 	end
 	mouse_x, mouse_y = love.mouse.getPosition()
-	love.graphics.setColor(1, 0.4, 0.3, CURSOR_ALPHA)
+	love.graphics.setColor(0.4, 1, 0.3, CURSOR_ALPHA)
 	love.graphics.circle("fill", mouse_x, mouse_y, CURSOR_SIZE)
 	love.graphics.setColor(1, 1, 1)
 	love.graphics.setLineWidth(CURSOR_SIZE / 8)
@@ -165,6 +167,9 @@ function love.update(dt)
 			if hit then
 				hits = hits + 1
 				combo = combo + 1
+				if combo > combo_max then
+					combo_max = combo
+				end
 				score = score + 10 + combo
 				hit_msgs[#hit_msgs + 1] = {
 					timer = SECONDS_PER_BEAT * 3,
