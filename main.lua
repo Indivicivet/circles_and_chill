@@ -13,6 +13,7 @@ function love.load()
 	combo = 0
 	all_circs = {
 		-- currently, u need to order these
+		-- todo :: handle fractional starts etc
 		{beat_start=2, x=50, y=50, size=30, count_in=2},
 		{beat_start=3, x=75, y=50, size=30, count_in=2},
 		{beat_start=4, x=100, y=50, size=30, count_in=2},
@@ -27,6 +28,15 @@ function love.load()
 		{beat_start=15, x=400, y=400, size=50, count_in=2},
 		{beat_start=16, x=500, y=400, size=20, count_in=2},
 	}
+	for i = 1, 100 do
+		all_circs[#all_circs + 1] = {
+			beat_start=16+i,
+			x=love.math.random(50, 750),
+			y=love.math.random(50, 550),
+			size=30 + 20 * love.math.random(0, 1),
+			count_in=2,
+		}
+	end
 	current_circs = {}
 	past_circs = {}
 	hit_msgs = {}
