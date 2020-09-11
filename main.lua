@@ -1,4 +1,30 @@
 
+function reset_game_state()
+	started = false
+	t = 0
+	next_circ_idx = 1
+	score = 0
+	hits = 0
+	misses = 0
+	combo = 0
+	combo_max = 0
+	all_circs = {}
+	for i = 1, 100 do
+		all_circs[#all_circs + 1] = {
+			beat_start=3 + i,
+			x=love.math.random(GAMEPLAY_LEFT, GAMEPLAY_RIGHT),
+			y=love.math.random(GAMEPLAY_TOP, GAMEPLAY_BOTTOM),
+			size=50 + 20 * love.math.random(0, 1),
+			count_in=2,
+		}
+	end
+	current_circs = {}
+	past_circs = {}
+	hit_msgs = {}
+	can_reset_time = 9999999  -- set to t+delay when finish all circles
+end
+
+
 function love.load()
 	WIDTH = 1280
 	HEIGHT = 720
@@ -31,28 +57,17 @@ function love.load()
 	hit_sound_idx = 1
 	miss_sound_idx = 1
 	
-	-- gameplay variables
-	started = false
-	t = 0
-	next_circ_idx = 1
-	score = 0
-	hits = 0
-	misses = 0
-	combo = 0
-	combo_max = 0
-	all_circs = {}
-	for i = 1, 100 do
-		all_circs[#all_circs + 1] = {
-			beat_start=3 + i,
-			x=love.math.random(GAMEPLAY_LEFT, GAMEPLAY_RIGHT),
-			y=love.math.random(GAMEPLAY_TOP, GAMEPLAY_BOTTOM),
-			size=50 + 20 * love.math.random(0, 1),
-			count_in=2,
-		}
-	end
-	current_circs = {}
-	past_circs = {}
-	hit_msgs = {}
+	PLAY_AGAIN_BUTTON = {
+		left = WIDTH / 2 - 120,
+		right = WIDTH / 2 + 120,
+		top = GAMEPLAY_BOTTOM - 130,
+		bottom = GAMEPLAY_BOTTOM - 30,
+	}
+	PLAY_AGAIN_BUTTON.width = PLAY_AGAIN_BUTTON.right - PLAY_AGAIN_BUTTON.left
+	PLAY_AGAIN_BUTTON.height = PLAY_AGAIN_BUTTON.bottom - PLAY_AGAIN_BUTTON.top
+	
+	-- setup gameplay variables
+	reset_game_state()
 end
 
 
@@ -101,6 +116,21 @@ function love.draw()
 	love.graphics.setColor(1, 1, 1, 0.5)
 	love.graphics.print("FPS: " .. tostring(love.timer.getFPS()), 1100, 10)
 	love.graphics.print("Beat: " .. tostring(beat_num), 1100, 50)
+	
+	if t > can_reset_time then
+		love.graphics.setColor(1, 0, 0, 0.2)
+		love.graphics.rectangle(
+			"fill",
+			PLAY_AGAIN_BUTTON.left, PLAY_AGAIN_BUTTON.top,
+			PLAY_AGAIN_BUTTON.width, PLAY_AGAIN_BUTTON.height
+		)
+		love.graphics.setColor(1, 1, 1)
+		love.graphics.printf(
+			"Play again?",
+			GAMEPLAY_LEFT, GAMEPLAY_BOTTOM - 100, GAMEPLAY_RIGHT - GAMEPLAY_LEFT,
+			"center"
+		)
+	end
 	
 	love.graphics.setFont(HIT_MSG_FONT)
 	for i, msg in ipairs(hit_msgs) do
@@ -240,6 +270,9 @@ function love.update(dt)
 			}
 			next_circ_idx = next_circ_idx + 1
 			next_circ = all_circs[next_circ_idx]
+			if next_circ_idx > #all_circs then
+				can_reset_time = t + current_circs[#current_circs].timer + 1
+			end
 		else
 			break
 		end
@@ -252,6 +285,15 @@ function love.mousepressed(m_x, m_y, button, istouch, presses)
 		started = true
 		love.mouse.setVisible(false)
 		return
+	end
+	if t > can_reset_time then
+		if (
+			m_x > PLAY_AGAIN_BUTTON.left and m_x < PLAY_AGAIN_BUTTON.right
+			and m_y > PLAY_AGAIN_BUTTON.top and m_y < PLAY_AGAIN_BUTTON.bottom
+		) then
+			reset_game_state()
+			started = true
+		end
 	end
 end
 
