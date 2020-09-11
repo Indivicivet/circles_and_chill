@@ -15,6 +15,7 @@ function love.load()
 	SECONDS_PER_BEAT = 60 / BPM
 	HIT_FADEOUT_BEATS = 2
 	
+	TITLE_FONT = love.graphics.newFont(96)
 	BASE_FONT = love.graphics.newFont(32)
 	HIT_MSG_FONT = love.graphics.newFont(96)
 	
@@ -67,11 +68,22 @@ end
 
 
 function love.draw()
-	love.graphics.setFont(BASE_FONT)
 	if not started then
-		love.graphics.print("click to start", 100, 100)
+		love.graphics.setFont(TITLE_FONT)
+		love.graphics.printf(
+			"CIRCLES AND CHILL",
+			GAMEPLAY_LEFT, GAMEPLAY_TOP + 200, GAMEPLAY_RIGHT - GAMEPLAY_LEFT,
+			"center"
+		)
+		love.graphics.setFont(BASE_FONT)
+		love.graphics.printf(
+			"click to start",
+			GAMEPLAY_LEFT, GAMEPLAY_TOP + 400, GAMEPLAY_RIGHT - GAMEPLAY_LEFT,
+			"center"
+		)
 		return
 	end
+	love.graphics.setFont(BASE_FONT)
 	love.graphics.setColor(1, 1, 1)
 	love.graphics.print("score: " .. tostring(score), 100, 10)
 	if not (hits + misses == 0) then
