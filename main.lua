@@ -85,7 +85,7 @@ function love.draw()
 	end
 	love.graphics.setFont(BASE_FONT)
 	love.graphics.setColor(1, 1, 1)
-	love.graphics.print("score: " .. tostring(score), 100, 10)
+	love.graphics.print("Score: " .. tostring(score), 50, 10)
 	if not (hits + misses == 0) then
 		if misses == 0 then
 			acc_str = "Perfect!"
@@ -95,12 +95,13 @@ function love.draw()
 	else
 		acc_str = "..."
 	end
-	love.graphics.print("accuracy: " .. acc_str, 100, 50)
-	love.graphics.print("combo: " .. tostring(combo), 300, 10)
-	love.graphics.print("max combo: " .. tostring(combo_max), 600, 10)
-	love.graphics.print("FPS: " .. tostring(love.timer.getFPS()), 1000, 10)
-	love.graphics.print("beat " .. tostring(beat_num), 1000, 50)
-	--love.graphics.print("sdfsdf " .. tostring(#current_circs), 500, 100)
+	love.graphics.print("Accuracy: " .. acc_str, 50, 50)
+	love.graphics.print("Combo: " .. tostring(combo), 400, 10)
+	love.graphics.print("Highest: " .. tostring(combo_max), 400, 50)
+	love.graphics.setColor(1, 1, 1, 0.5)
+	love.graphics.print("FPS: " .. tostring(love.timer.getFPS()), 1100, 10)
+	love.graphics.print("Beat: " .. tostring(beat_num), 1100, 50)
+	
 	love.graphics.setFont(HIT_MSG_FONT)
 	for i, msg in ipairs(hit_msgs) do
 		love.graphics.setColor(
